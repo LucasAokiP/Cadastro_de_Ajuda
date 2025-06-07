@@ -16,3 +16,31 @@ const preencherFormulario = (endereco) => {
     document.getElementById("cidade").value = endereco.localidade;
     document.getElementById("estado").value = endereco.estado;
 }
+
+//verificaçao se o Cep é valido
+const eNumero = (Numero) => /^[0-9]+$/.test(Numero);
+
+//confere se o Cep tem o tamanho certo
+const cepValido = (Cep) => Cep.length == 8 && eNumero(Cep);
+
+const pesquisarCep = async() =>{
+    limpar();
+    const url = `http://viacep.com.br/ws/${cep.value}/json/`;
+
+    if(cepValido(Cep.value)){
+        const dados = await fetch(url);
+        const addres =await dados.json();
+
+        if(addres.hasOwnPropety('erro')){
+            alert('CEP não encontrado');
+        }
+        else{
+            preencherFormulario(addres);
+        }
+    }
+    else{
+        alert('CEP incorreto');
+    }
+}
+
+document.getElementById('cep').addEventListener('focuosout',pesquisarCep);
